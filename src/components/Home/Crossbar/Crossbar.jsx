@@ -51,7 +51,7 @@ const Crossbar = () => {
         <CrossbarProcentSpan>
           <CrossbarSpanStart>0%</CrossbarSpanStart>
           <CrossbarSpanMiddle
-            style={{ left: `calc(${waterIntakePercentage}% - 10px)` }}
+            style={{ left: `calc(${waterIntakePercentage}% + 4px)` }}
             id="WaterMark"
           >
             {waterIntakePercentage}%
