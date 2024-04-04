@@ -1,28 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   CrossbarBox,
   CrossbarBoxRange,
   CrossbarInput,
   CrossbarProcentSpan,
-  CrossbarSpanMiddle,
   CrossbarSpanEnd,
   CrossbarSpanStart,
   CrossbarText,
   DarkOverlay,
   CrossbarButton,
+  CrossbarSpanMiddle,
 } from './Crossbar.styled';
 import CrossbarButtonIcon from './CrossbarIcons/CrossbarButtonIcon';
 import CrossbarModal from './CrossbarModal';
 
 const Crossbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [waterAmount, setWaterAmount] = useState(0);
   const [waterIntakePercentage, setWaterIntakePercentage] = useState(0);
 
-  const handleSaveWaterAmount = (waterAmount) => {
-    setWaterIntakePercentage(waterAmount);
-  };
+  useEffect(() => {
+    const percentage = (waterAmount / 2000) * 100;
+    setWaterIntakePercentage(percentage);
+  }, [waterAmount]);
 
-  // const waterIntakePercentage = 50;
+  const handleSaveWaterAmount = (newWaterAmount) => {
+    setWaterAmount((prevWaterAmount) => prevWaterAmount + newWaterAmount);
+  };
 
   const handleCrossbarButtonClick = () => {
     setIsModalOpen(true);
@@ -37,10 +41,19 @@ const Crossbar = () => {
       {isModalOpen && <DarkOverlay onClick={closeModal} />}
       <CrossbarBoxRange>
         <CrossbarText>Today</CrossbarText>
-        <CrossbarInput type="range" percentage={waterIntakePercentage} />
+        <CrossbarInput
+          type="range"
+          min={0}
+          max={100}
+          value={waterIntakePercentage}
+          percentage={waterIntakePercentage}
+        />
         <CrossbarProcentSpan>
           <CrossbarSpanStart>0%</CrossbarSpanStart>
-          <CrossbarSpanMiddle id="WaterMark">
+          <CrossbarSpanMiddle
+            style={{ left: `calc(${waterIntakePercentage}% - 10px)` }}
+            id="WaterMark"
+          >
             {waterIntakePercentage}%
           </CrossbarSpanMiddle>
           <CrossbarSpanEnd>100%</CrossbarSpanEnd>
@@ -60,56 +73,3 @@ const Crossbar = () => {
 };
 
 export default Crossbar;
-
-// import { useState } from 'react';
-// import {
-//   CrossbarBox,
-//   CrossbarBoxRange,
-//   CrossbarInput,
-//   CrossbarProcentSpan,
-//   CrossbarSpanMiddle,
-//   CrossbarSpanEnd,
-//   CrossbarSpanStart,
-//   CrossbarText,
-//   DarkOverlay,
-//   CrossbarButton,
-// } from './Crossbar.styled';
-// import CrossbarButtonIcon from './CrossbarIcons/CrossbarButtonIcon';
-// import CrossbarModal from './CrossbarModal';
-
-// const Crossbar = () => {
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const waterIntakePercentage = 50;
-
-//   const handleCrossbarButtonClick = () => {
-//     setIsModalOpen(true);
-//   };
-
-//   const closeModal = () => {
-//     setIsModalOpen(false);
-//   };
-
-//   return (
-//     <CrossbarBox>
-//       {isModalOpen && <DarkOverlay onClick={closeModal} />}
-//       <CrossbarBoxRange>
-//         <CrossbarText>Today</CrossbarText>
-//         <CrossbarInput type="range" percentage={waterIntakePercentage} />
-//         <CrossbarProcentSpan>
-//           <CrossbarSpanStart>0%</CrossbarSpanStart>
-//           <CrossbarSpanMiddle id="WaterMark">
-//             {waterIntakePercentage}%
-//           </CrossbarSpanMiddle>
-//           <CrossbarSpanEnd>100%</CrossbarSpanEnd>
-//         </CrossbarProcentSpan>
-//       </CrossbarBoxRange>
-//       <CrossbarButton onClick={handleCrossbarButtonClick}>
-//         <CrossbarButtonIcon />
-//         Add Water
-//       </CrossbarButton>
-//       <CrossbarModal isOpen={isModalOpen} onClose={closeModal} />
-//     </CrossbarBox>
-//   );
-// };
-
-// export default Crossbar;
